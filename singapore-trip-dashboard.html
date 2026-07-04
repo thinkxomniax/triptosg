@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Singapore Day Trip — Soleh & Partner</title>
+
+<!-- Fonts: Fraunces (display), Plus Jakarta Sans (body), JetBrains Mono (data) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<!-- Tailwind CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+<style>
+  :root{
+    --bg: #FAF7EF;
+    --bg-alt: #F1EADA;
+    --surface: #FFFFFF;
+    --surface-2: #FBF9F4;
+    --text: #1B2926;
+    --text-muted: #5C6B67;
+    --teal: #0F5257;
+    --teal-deep: #0A3A3E;
+    --teal-soft: rgba(15,82,87,0.10);
+    --gold: #B9822F;
+    --gold-soft: rgba(185,130,47,0.14);
+    --coral: #C6604D;
+    --coral-soft: rgba(198,96,77,0.12);
+    --plum: #5B3161;
+    --line: rgba(15,82,87,0.14);
+    --shadow: 0 20px 50px -20px rgba(10,40,42,0.25);
+    --shadow-sm: 0 8px 24px -12px rgba(10,40,42,0.18);
+    --radius: 22px;
+  }
+  html.dark{
+    --bg: #071A1D;
+    --bg-alt: #0B2226;
+    --surface: #0E2A2E;
+    --surface-2: #0C2528;
+    --text: #F1EEE3;
+    --text-muted: #93ACA8;
+    --teal: #4FD0C4;
+    --teal-deep: #7FE0D6;
+    --teal-soft: rgba(79,208,196,0.12);
+    --gold: #E3B662;
+    --gold-soft: rgba(227,182,98,0.14);
+    --coral: #E79A87;
+    --coral-soft: rgba(231,154,135,0.14);
+    --plum: #C79ACF;
+    --line: rgba(255,255,255,0.10);
+    --shadow: 0 20px 50px -20px rgba(0,0,0,0.6);
+    --shadow-sm: 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+
+  *{ scroll-behavior: smooth; }
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    transition: background .4s ease, color .4s ease;
+    overflow-x: hidden;
+  }
+  .font-display{ font-family: 'Fraunces', serif; }
+  .font-mono{ font-family: 'JetBrains Mono', monospace; }
+
+  ::selection{ background: var(--gold-soft); color: var(--text); }
+
+  ::-webkit-scrollbar{ width: 10px; }
+  ::-webkit-scrollbar-track{ background: transparent; }
+  ::-webkit-scrollbar-thumb{ background: var(--line); border-radius: 10px; }
+
+  /* ---------- Loading screen ---------- */
+  #loader{
+    position: fixed; inset:0; z-index:9999;
+    background: var(--teal-deep);
+    display:flex; align-items:center; justify-content:center; flex-direction:column; gap:18px;
+    transition: opacity .6s ease, visibility .6s ease;
+  }
+  #loader.hide{ opacity:0; visibility:hidden; pointer-events:none; }
+  .loader-ring{
+    width:54px; height:54px; border-radius:50%;
+    border: 3px solid rgba(255,255,255,0.18);
+    border-top-color:#E3B662;
+    animation: spin 0.9s linear infinite;
+  }
+  @keyframes spin{ to{ transform: rotate(360deg); } }
+  .loader-text{ font-family:'Fraunces', serif; color:#F1EEE3; letter-spacing:0.08em; font-size:14px; text-transform:uppercase; }
+
+  /* ---------- Nav ---------- */
+  #navbar{
+    backdrop-filter: blur(14px) saturate(140%);
+    background: color-mix(in srgb, var(--bg) 78%, transparent);
+    border-bottom: 1px solid var(--line);
+    transition: all .3s ease;
+  }
+  .nav-link{ position:relative; color: var(--text-muted); font-weight:500; font-size:14px; }
+  .nav-link::after{
+    content:''; position:absolute; left:0; bottom:-6px; height:2px; width:0%;
+    background: var(--gold); transition: width .25s ease;
+  }
+  .nav-link:hover{ color: var(--text); }
+  .nav-link:hover::after{ width:100%; }
+
+  .toggle-btn{
+    width:42px; height:42px; border-radius:999px; border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center; color: var(--text);
+    transition: all .25s ease; background: var(--surface);
+  }
+  .toggle-btn:hover{ background: var(--teal-soft); transform: translateY(-1px); }
+
+  /* ---------- Hero ---------- */
+  .hero-sky{
+    background: radial-gradient(circle at 20% 10%, rgba(227,182,98,0.18), transparent 40%),
+                linear-gradient(180deg, var(--teal-deep) 0%, #072024 60%, #051417 100%);
+  }
+  html.dark .hero-sky{
+    background: radial-gradient(circle at 20% 10%, rgba(227,182,98,0.12), transparent 40%),
+                linear-gradient(180deg, #05161A 0%, #030D10 100%);
+  }
+  .skyline path{ fill: #041417; }
+  html.dark .skyline path{ fill: #02090B; }
+  .skyline .glow{ fill: #E3B662; opacity:0.85; }
+
+  .ticket-card{
+    background: var(--surface);
+    border-radius: 26px;
+    box-shadow: var(--shadow);
+    position: relative;
+    border: 1px solid var(--line);
+  }
+  .ticket-notch{
+    position:absolute; width:26px; height:26px; background: var(--teal-deep);
+    border-radius:50%; top:50%; transform:translateY(-50%);
+  }
+  html.dark .ticket-notch{ background:#050f11; }
+  .ticket-perf{
+    border-left: 2px dashed var(--line);
+  }
+  .barcode span{ display:inline-block; width:3px; background: var(--text); opacity:0.55; margin-right:2px; }
+
+  .quote-mark{ font-family:'Fraunces', serif; font-style:italic; }
+
+  #countdown .cd-box{
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 16px;
+    backdrop-filter: blur(6px);
+  }
+
+  .btn-primary{
+    background: var(--gold); color: #241705; font-weight:600;
+    border-radius: 999px; padding: 14px 30px;
+    transition: all .25s ease; box-shadow: 0 12px 30px -10px rgba(227,182,98,0.55);
+  }
+  .btn-primary:hover{ transform: translateY(-2px); box-shadow: 0 16px 36px -8px rgba(227,182,98,0.65); }
+
+  .btn-ghost{
+    border:1px solid rgba(255,255,255,0.35); color:#F1EEE3; border-radius:999px; padding:14px 26px;
+    transition: all .25s ease;
+  }
+  .btn-ghost:hover{ background: rgba(255,255,255,0.1); }
+
+  /* ---------- Section shell ---------- */
+  section{ scroll-margin-top: 90px; }
+  .section-pad{ padding: 100px 0; }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace; letter-spacing:0.18em; text-transform:uppercase;
+    font-size:12px; color: var(--gold); font-weight:600;
+  }
+  .section-title{ font-family:'Fraunces', serif; font-weight:600; letter-spacing:-0.01em; }
+
+  .reveal{ opacity:0; transform: translateY(28px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.in{ opacity:1; transform:none; }
+
+  .card{
+    background: var(--surface); border:1px solid var(--line); border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+  }
+  .card:hover{ transform: translateY(-4px); box-shadow: var(--shadow); border-color: var(--teal); }
+
+  /* ---------- Timeline (MRT line motif) ---------- */
+  .mrt-line{
+    position:absolute; left:22px; top:0; bottom:0; width:3px;
+    background: repeating-linear-gradient(180deg, var(--teal) 0 10px, transparent 10px 16px);
+  }
+  @media(min-width:1024px){ .mrt-line{ left:50%; transform:translateX(-50%); } }
+
+  .station-dot{
+    width:46px; height:46px; border-radius:50%; background: var(--surface);
+    border:3px solid var(--teal); display:flex; align-items:center; justify-content:center;
+    font-family:'JetBrains Mono', monospace; font-weight:600; font-size:11px; color: var(--teal);
+    box-shadow: var(--shadow-sm); flex-shrink:0; z-index:2;
+  }
+  .station-dot.done{ background: var(--teal); color:#fff; }
+
+  .status-badge{
+    font-size:11px; font-weight:600; padding:4px 12px; border-radius:999px;
+    text-transform:uppercase; letter-spacing:0.05em; font-family:'JetBrains Mono',monospace;
+  }
+  .status-upcoming{ background: var(--teal-soft); color: var(--teal); }
+  .status-done{ background: var(--gold-soft); color: var(--gold); }
+
+  .tag-chip{
+    display:inline-flex; align-items:center; gap:6px; font-size:12px; color: var(--text-muted);
+    background: var(--bg-alt); padding:6px 12px; border-radius:999px; font-family:'JetBrains Mono',monospace;
+  }
+
+  /* ---------- Budget ---------- */
+  .progress-track{ height:10px; border-radius:999px; background: var(--bg-alt); overflow:hidden; }
+  .progress-fill{ height:100%; border-radius:999px; background: linear-gradient(90deg, var(--teal), var(--gold)); transition: width 1s cubic-bezier(.22,1,.36,1); }
+
+  input.money-input{
+    background: transparent; border-bottom:1px solid var(--line); font-family:'JetBrains Mono',monospace;
+    color: var(--text); width: 100%; padding:4px 0; font-weight:600;
+  }
+  input.money-input:focus{ outline:none; border-color: var(--gold); }
+
+  /* ---------- MRT route diagram ---------- */
+  .route-rail{
+    position:relative; padding-left:36px;
+  }
+  .route-rail::before{
+    content:''; position:absolute; left:9px; top:10px; bottom:10px; width:4px; background: var(--teal); border-radius:4px;
+  }
+  .route-stop::before{
+    content:''; position:absolute; left:2px; top:6px; width:18px; height:18px; border-radius:50%;
+    background: var(--surface); border:4px solid var(--gold);
+  }
+
+  /* ---------- Checklist ---------- */
+  .check-item{ display:flex; align-items:center; gap:12px; cursor:pointer; }
+  .check-box{
+    width:22px; height:22px; border-radius:7px; border:2px solid var(--line);
+    display:flex; align-items:center; justify-content:center; flex-shrink:0; transition: all .2s ease;
+    background: var(--surface);
+  }
+  .check-box.checked{ background: var(--teal); border-color: var(--teal); color:#fff; }
+  .check-item.checked .check-label{ text-decoration: line-through; color: var(--text-muted); }
+
+  .ring{
+    transform: rotate(-90deg);
+  }
+  .ring circle{ transition: stroke-dashoffset 1s cubic-bezier(.22,1,.36,1); }
+
+  /* ---------- Notes ---------- */
+  textarea.note-area{
+    width:100%; background: transparent; resize:vertical; min-height:120px; color: var(--text);
+    font-family:'Plus Jakarta Sans', sans-serif; line-height:1.6;
+  }
+  textarea.note-area:focus{ outline:none; }
+
+  .washi{
+    background: var(--gold-soft); height:26px; width:70px; position:absolute; top:-12px; left:24px;
+    transform: rotate(-3deg); border-radius:2px; opacity:0.9;
+  }
+
+  /* ---------- Back to top ---------- */
+  #backToTop{
+    position:fixed; bottom:26px; right:26px; width:50px; height:50px; border-radius:50%;
+    background: var(--teal); color:#fff; display:flex; align-items:center; justify-content:center;
+    box-shadow: var(--shadow); opacity:0; pointer-events:none; transform: translateY(10px);
+    transition: all .3s ease; z-index:40;
+  }
+  #backToTop.show{ opacity:1; pointer-events:auto; transform:none; }
+
+  .fine-line{ border-color: var(--line); }
+
+  @media (max-width: 1023px){
+    .timeline-card-wrap{ padding-left: 66px !important; }
+  }
+
+  .savedToast{
+    position:fixed; bottom:26px; left:26px; background: var(--teal-deep); color:#F1EEE3;
+    padding:10px 18px; border-radius:12px; font-size:13px; font-family:'JetBrains Mono',monospace;
+    box-shadow: var(--shadow); transform: translateY(20px); opacity:0; transition: all .3s ease; z-index:50;
+  }
+  .savedToast.show{ transform:none; opacity:1; }
+</style>
+</head>
+<body class="antialiased">
+
+<!-- ============ LOADER ============ -->
+<div id="loader">
+  <div class="loader-ring"></div>
+  <div class="loader-text">Boarding pass loading…</div>
+</div>
+
+<!-- ============ NAVBAR ============ -->
+<nav id="navbar" class="fixed top-0 left-0 right-0 z-40">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 flex items-center justify-between h-[72px]">
+    <a href="#hero" class="font-display text-lg font-semibold tracking-tight" style="color:var(--text)">
+      SG<span style="color:var(--gold)">·</span>ONE
+    </a>
+    <div class="hidden lg:flex items-center gap-8">
+      <a href="#timeline" class="nav-link">Timeline</a>
+      <a href="#budget" class="nav-link">Budget</a>
+      <a href="#mrt" class="nav-link">MRT</a>
+      <a href="#food" class="nav-link">Food</a>
+      <a href="#photos" class="nav-link">Photos</a>
+      <a href="#packing" class="nav-link">Packing</a>
+      <a href="#notes" class="nav-link">Notes</a>
+      <a href="#memories" class="nav-link">Memories</a>
+    </div>
+    <div class="flex items-center gap-3">
+      <button id="themeToggle" class="toggle-btn" aria-label="Toggle dark mode">
+        <i class="fa-solid fa-moon" id="themeIcon"></i>
+      </button>
+      <button id="navMenuBtn" class="toggle-btn lg:hidden" aria-label="Menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+  </div>
+  <div id="mobileMenu" class="hidden lg:hidden flex-col px-6 pb-5 gap-4" style="background:var(--bg)">
+    <a href="#timeline" class="nav-link">Timeline</a>
+    <a href="#budget" class="nav-link">Budget</a>
+    <a href="#mrt" class="nav-link">MRT</a>
+    <a href="#food" class="nav-link">Food</a>
+    <a href="#photos" class="nav-link">Photos</a>
+    <a href="#packing" class="nav-link">Packing</a>
+    <a href="#notes" class="nav-link">Notes</a>
+    <a href="#memories" class="nav-link">Memories</a>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header id="hero" class="hero-sky relative min-h-screen flex items-end overflow-hidden">
+  <!-- skyline -->
+  <svg class="skyline absolute bottom-0 left-0 w-full" viewBox="0 0 1440 320" preserveAspectRatio="none" style="height:42vh; min-height:220px;">
+    <path d="M0,320 L0,210 L30,210 L30,180 L55,180 L55,210 L90,210 L90,150 L110,150 L110,210 L140,210 L140,120 L160,120 L160,90 L180,90 L180,120 L200,120 L200,210 L240,210 L240,170 L260,170 L260,140 L280,140 L280,170 L300,170 L300,210 L330,210 L330,60 L345,60 L345,40 L360,40 L360,60 L375,60 L375,210 L410,210 L410,180 L430,180 L430,210 L470,210 L470,130 L490,130 L490,100 L510,100 L510,130 L530,130 L530,210 L560,210 L560,170 L590,170 L590,210 L620,210 L620,20 L635,20 L635,10 L650,10 L650,20 L665,20 L665,210 L700,210 L700,160 L725,160 L725,210 L760,210 L760,110 L780,110 L780,80 L800,80 L800,110 L820,110 L820,210 L850,210 L850,180 L880,180 L880,210 L920,210 L920,140 L950,140 L950,100 L970,100 L970,140 L990,140 L990,210 L1030,210 L1030,170 L1060,170 L1060,210 L1100,210 L1100,90 L1120,90 L1120,50 L1140,50 L1140,90 L1160,90 L1160,210 L1200,210 L1200,160 L1230,160 L1230,210 L1270,210 L1270,120 L1300,120 L1300,80 L1320,80 L1320,120 L1340,120 L1340,210 L1380,210 L1380,180 L1410,180 L1410,210 L1440,210 L1440,320 Z"></path>
+    <circle class="glow" cx="345" cy="30" r="3"></circle>
+    <circle class="glow" cx="635" cy="8" r="3"></circle>
+    <circle class="glow" cx="1120" cy="45" r="3"></circle>
+  </svg>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 pb-24 pt-40 w-full grid lg:grid-cols-2 gap-14 items-end">
+    <div>
+      <p class="eyebrow mb-5" style="color:#E3B662">One Ferry · One Day · One Island</p>
+      <h1 class="font-display text-white leading-[0.95] text-[13vw] lg:text-[5.2vw] font-semibold tracking-tight">
+        Singapore<br>Day&nbsp;Trip
+      </h1>
+      <p class="quote-mark text-2xl mt-6" style="color:#E8E3D6">Soleh <i class="fa-solid fa-heart text-sm" style="color:#E79A87"></i> Partner</p>
+      <p class="mt-8 max-w-md text-[15px] leading-relaxed" style="color:#B9C7C4">
+        "Before the new job begins, one island, one ferry, and twelve hours to wander slowly, eat well, and remember why we fell for this city in the first place."
+      </p>
+
+      <div class="flex flex-wrap gap-4 mt-10">
+        <a href="#timeline" class="btn-primary"><i class="fa-solid fa-compass mr-2"></i>Start Exploring</a>
+        <button id="editDateBtn" class="btn-ghost"><i class="fa-regular fa-calendar mr-2"></i><span id="tripDateLabel">Set trip date</span></button>
+      </div>
+    </div>
+
+    <!-- Ticket / countdown card -->
+    <div class="ticket-card flex overflow-hidden" style="max-width:480px; margin-left:auto;">
+      <div class="flex-1 p-7">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <p class="eyebrow" style="color:var(--gold)">Boarding Pass</p>
+            <p class="font-display text-xl font-semibold mt-1">Batam <i class="fa-solid fa-arrow-right-long text-xs mx-1" style="color:var(--text-muted)"></i> Singapore</p>
+          </div>
+          <i class="fa-solid fa-ferry text-2xl" style="color:var(--teal)"></i>
+        </div>
+        <div id="countdown" class="grid grid-cols-4 gap-2 text-center mb-6">
+          <div class="cd-box py-3" style="background:var(--teal-soft); border-color:var(--line)">
+            <p class="font-mono text-2xl font-semibold" id="cdDays" style="color:var(--teal)">--</p>
+            <p class="text-[10px] uppercase tracking-wide mt-1" style="color:var(--text-muted)">Days</p>
+          </div>
+          <div class="cd-box py-3" style="background:var(--teal-soft); border-color:var(--line)">
+            <p class="font-mono text-2xl font-semibold" id="cdHours" style="color:var(--teal)">--</p>
+            <p class="text-[10px] uppercase tracking-wide mt-1" style="color:var(--text-muted)">Hrs</p>
+          </div>
+          <div class="cd-box py-3" style="background:var(--teal-soft); border-color:var(--line)">
+            <p class="font-mono text-2xl font-semibold" id="cdMins" style="color:var(--teal)">--</p>
+            <p class="text-[10px] uppercase tracking-wide mt-1" style="color:var(--text-muted)">Min</p>
+          </div>
+          <div class="cd-box py-3" style="background:var(--teal-soft); border-color:var(--line)">
+            <p class="font-mono text-2xl font-semibold" id="cdSecs" style="color:var(--teal)">--</p>
+            <p class="text-[10px] uppercase tracking-wide mt-1" style="color:var(--text-muted)">Sec</p>
+          </div>
+        </div>
+        <input type="date" id="tripDateInput" class="w-full text-sm py-2 px-3 rounded-lg" style="background:var(--bg-alt); border:1px solid var(--line); color:var(--text)">
+      </div>
+      <div class="ticket-perf w-24 flex flex-col items-center justify-center gap-3 relative" style="background:var(--bg-alt)">
+        <div class="ticket-notch" style="top:0; left:-13px;"></div>
+        <div class="ticket-notch" style="bottom:0; top:auto; left:-13px; transform:none;"></div>
+        <p class="font-mono text-[10px] tracking-widest" style="writing-mode:vertical-rl; color:var(--text-muted)">DEPARTURE · 08:30</p>
+        <div class="barcode flex items-end h-10">
+          <span style="height:100%"></span><span style="height:60%"></span><span style="height:80%"></span><span style="height:40%"></span><span style="height:100%"></span><span style="height:55%"></span><span style="height:90%"></span><span style="height:30%"></span><span style="height:70%"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-7xl mx-auto px-6 lg:px-10">
+
+  <!-- ============ TIMELINE ============ -->
+  <section id="timeline" class="section-pad">
+    <div class="reveal mb-16 max-w-2xl">
+      <p class="eyebrow mb-3">The Route</p>
+      <h2 class="section-title text-4xl lg:text-5xl">Trip Timeline</h2>
+      <p class="text-[15px] mt-4" style="color:var(--text-muted)">Twelve stops, one loop through the island — tap a station once you've checked it off.</p>
+    </div>
+
+    <div class="relative">
+      <div class="mrt-line"></div>
+      <div id="timelineList" class="space-y-10 lg:space-y-0"></div>
+    </div>
+  </section>
+
+  <!-- ============ BUDGET ============ -->
+  <section id="budget" class="section-pad border-t fine-line">
+    <div class="reveal mb-16 max-w-2xl">
+      <p class="eyebrow mb-3">Money Matters</p>
+      <h2 class="section-title text-4xl lg:text-5xl">Budget Dashboard</h2>
+      <p class="text-[15px] mt-4" style="color:var(--text-muted)">Every number below is editable — the totals recalculate as you go.</p>
+    </div>
+
+    <div class="grid lg:grid-cols-3 gap-8">
+      <!-- Overview -->
+      <div class="lg:col-span-2 grid sm:grid-cols-3 gap-5 reveal">
+        <div class="card p-6">
+          <p class="eyebrow mb-3" style="color:var(--text-muted)">Total Budget</p>
+          <div class="flex items-center gap-1">
+            <span class="font-mono text-sm" style="color:var(--text-muted)">SGD</span>
+            <input type="number" id="totalBudget" class="money-input text-2xl" value="400">
+          </div>
+        </div>
+        <div class="card p-6">
+          <p class="eyebrow mb-3" style="color:var(--text-muted)">Spent</p>
+          <p class="font-mono text-2xl font-semibold" id="spentDisplay" style="color:var(--coral)">SGD 0</p>
+        </div>
+        <div class="card p-6">
+          <p class="eyebrow mb-3" style="color:var(--text-muted)">Remaining</p>
+          <p class="font-mono text-2xl font-semibold" id="remainingDisplay" style="color:var(--teal)">SGD 0</p>
+        </div>
+
+        <div class="sm:col-span-3 card p-6">
+          <div class="flex justify-between items-center mb-2">
+            <p class="text-sm font-medium">Overall usage</p>
+            <p class="font-mono text-sm" id="usagePct" style="color:var(--text-muted)">0%</p>
+          </div>
+          <div class="progress-track"><div class="progress-fill" id="usageFill" style="width:0%"></div></div>
+        </div>
+
+        <!-- categories -->
+        <div class="sm:col-span-3 grid sm:grid-cols-2 gap-5 mt-1">
+          <div class="card p-6" data-cat="transport">
+            <div class="flex items-center justify-between mb-4">
+              <p class="font-medium flex items-center gap-2"><i class="fa-solid fa-train-subway" style="color:var(--teal)"></i> Transportation</p>
+            </div>
+            <div class="flex items-center gap-2 font-mono text-sm">
+              <span style="color:var(--text-muted)">SGD</span>
+              <input type="number" class="money-input cat-input" data-cat="transport" value="45">
+            </div>
+            <div class="progress-track mt-3"><div class="progress-fill cat-fill" data-cat="transport" style="width:0%"></div></div>
+          </div>
+          <div class="card p-6" data-cat="food">
+            <div class="flex items-center justify-between mb-4">
+              <p class="font-medium flex items-center gap-2"><i class="fa-solid fa-bowl-rice" style="color:var(--coral)"></i> Food</p>
+            </div>
+            <div class="flex items-center gap-2 font-mono text-sm">
+              <span style="color:var(--text-muted)">SGD</span>
+              <input type="number" class="money-input cat-input" data-cat="food" value="80">
+            </div>
+            <div class="progress-track mt-3"><div class="progress-fill cat-fill" data-cat="food" style="width:0%"></div></div>
+          </div>
+          <div class="card p-6" data-cat="shopping">
+            <div class="flex items-center justify-between mb-4">
+              <p class="font-medium flex items-center gap-2"><i class="fa-solid fa-bag-shopping" style="color:var(--gold)"></i> Shopping</p>
+            </div>
+            <div class="flex items-center gap-2 font-mono text-sm">
+              <span style="color:var(--text-muted)">SGD</span>
+              <input type="number" class="money-input cat-input" data-cat="shopping" value="60">
+            </div>
+            <div class="progress-track mt-3"><div class="progress-fill cat-fill" data-cat="shopping" style="width:0%"></div></div>
+          </div>
+          <div class="card p-6" data-cat="emergency">
+            <div class="flex items-center justify-between mb-4">
+              <p class="font-medium flex items-center gap-2"><i class="fa-solid fa-kit-medical" style="color:var(--plum)"></i> Emergency</p>
+            </div>
+            <div class="flex items-center gap-2 font-mono text-sm">
+              <span style="color:var(--text-muted)">SGD</span>
+              <input type="number" class="money-input cat-input" data-cat="emergency" value="30">
+            </div>
+            <div class="progress-track mt-3"><div class="progress-fill cat-fill" data-cat="emergency" style="width:0%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pie chart -->
+      <div class="card p-6 reveal flex flex-col">
+        <p class="eyebrow mb-4" style="color:var(--text-muted)">Allocation</p>
+        <div class="flex-1 flex items-center justify-center">
+          <canvas id="budgetChart" width="240" height="240"></canvas>
+        </div>
+        <p class="text-xs text-center mt-4" style="color:var(--text-muted)">Based on the four category amounts above</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MRT ROUTE ============ -->
+  <section id="mrt" class="section-pad border-t fine-line">
+    <div class="reveal mb-16 max-w-2xl">
+      <p class="eyebrow mb-3">Getting Around</p>
+      <h2 class="section-title text-4xl lg:text-5xl">MRT Route</h2>
+      <p class="text-[15px] mt-4" style="color:var(--text-muted)">Ferry in at HarbourFront, loop the island by train, ferry home from the same pier.</p>
+    </div>
+
+    <div class="route-rail space-y-10 reveal" id="mrtRoute"></div>
+  </section>
+
+  <!-- ============ FOOD WISHLIST ============ -->
+  <section id="food" class="section-pad border-t fine-line">
+    <div class="reveal mb-16 flex flex-wrap items-end justify-between gap-6">
+      <div class="max-w-2xl">
+        <p class="eyebrow mb-3">Eat Our Way Through</p>
+        <h2 class="section-title text-4xl lg:text-5xl">Food Wishlist</h2>
+      </div>
+      <div class="text-right">
+        <p class="font-mono text-3xl font-semibold" id="foodPct" style="color:var(--coral)">0%</p>
+        <p class="text-xs" style="color:var(--text-muted)">tasted so far</p>
+      </div>
+    </div>
+    <div id="foodGrid" class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 reveal"></div>
+  </section>
+
+  <!-- ============ PHOTO SPOTS ============ -->
+  <section id="photos" class="section-pad border-t fine-line">
+    <div class="reveal mb-16 max-w-2xl">
+      <p class="eyebrow mb-3">Frame It</p>
+      <h2 class="section-title text-4xl lg:text-5xl">Photo Spots</h2>
+      <p class="text-[15px] mt-4" style="color:var(--text-muted)">Six spots worth slowing down for — golden hour recommended twice.</p>
+    </div>
+    <div id="photoGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 reveal"></div>
+  </section>
+
+  <!-- ============ PACKING ============ -->
+  <section id="packing" class="section-pad border-t fine-line">
+    <div class="grid lg:grid-cols-3 gap-12">
+      <div class="reveal">
+        <p class="eyebrow mb-3">Before We Leave</p>
+        <h2 class="section-title text-4xl lg:text-5xl mb-6">Packing<br>Checklist</h2>
+        <div class="flex items-center gap-5">
+          <svg class="ring" width="88" height="88">
+            <circle cx="44" cy="44" r="38" stroke="var(--bg-alt)" stroke-width="8" fill="none"></circle>
+            <circle id="packRing" cx="44" cy="44" r="38" stroke="var(--teal)" stroke-width="8" fill="none" stroke-linecap="round" stroke-dasharray="238.76" stroke-dashoffset="238.76"></circle>
+          </svg>
+          <div>
+            <p class="font-mono text-2xl font-semibold" id="packPct">0%</p>
+            <p class="text-xs" style="color:var(--text-muted)">packed and ready</p>
+          </div>
+        </div>
+      </div>
+      <div class="lg:col-span-2 grid sm:grid-cols-2 gap-x-10 gap-y-4 reveal" id="packingGrid"></div>
+    </div>
+  </section>
+
+  <!-- ============ NOTES ============ -->
+  <section id="notes" class="section-pad border-t fine-line">
+    <div class="reveal mb-16 max-w-2xl">
+      <p class="eyebrow mb-3">Jot It Down</p>
+      <h2 class="section-title text-4xl lg:text-5xl">Notes</h2>
+      <p class="text-[15px] mt-4" style="color:var(--text-muted)">Saved automatically as you type — nothing to click.</p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6 reveal">
+      <div class="card p-6 relative">
+        <div class="washi"></div>
+        <p class="eyebrow mb-3">Before We Go</p>
+        <textarea class="note-area" id="note1" placeholder="Reminders, bookings, things to confirm…"></textarea>
+      </div>
+      <div class="card p-6 relative">
+        <div class="washi" style="background:var(--coral-soft)"></div>
+        <p class="eyebrow mb-3">While There</p>
+        <textarea class="note-area" id="note2" placeholder="Ideas that come up on the day…"></textarea>
+      </div>
+      <div class="card p-6 relative">
+        <div class="washi" style="background:var(--teal-soft)"></div>
+        <p class="eyebrow mb-3">Random Thoughts</p>
+        <textarea class="note-area" id="note3" placeholder="Anything at all…"></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MEMORIES ============ -->
+  <section id="memories" class="section-pad border-t fine-line">
+    <div class="reveal mb-16 max-w-2xl">
+      <p class="eyebrow mb-3">After the Ferry Home</p>
+      <h2 class="section-title text-4xl lg:text-5xl">Memories</h2>
+      <p class="text-[15px] mt-4" style="color:var(--text-muted)">Fill these in on the ferry back, while it's still fresh.</p>
+    </div>
+    <div class="grid md:grid-cols-2 gap-6 reveal">
+      <div class="card p-6">
+        <p class="font-medium mb-2 flex items-center gap-2"><i class="fa-solid fa-map-pin" style="color:var(--teal)"></i> Favorite Place</p>
+        <textarea class="note-area" id="mem1" style="min-height:70px" placeholder="Where did we love most?"></textarea>
+      </div>
+      <div class="card p-6">
+        <p class="font-medium mb-2 flex items-center gap-2"><i class="fa-solid fa-utensils" style="color:var(--coral)"></i> Best Food</p>
+        <textarea class="note-area" id="mem2" style="min-height:70px" placeholder="What did we keep talking about?"></textarea>
+      </div>
+      <div class="card p-6">
+        <p class="font-medium mb-2 flex items-center gap-2"><i class="fa-solid fa-face-laugh-squint" style="color:var(--gold)"></i> Funniest Moment</p>
+        <textarea class="note-area" id="mem3" style="min-height:70px" placeholder="What made us laugh the hardest?"></textarea>
+      </div>
+      <div class="card p-6">
+        <p class="font-medium mb-2 flex items-center gap-2"><i class="fa-solid fa-arrow-rotate-right" style="color:var(--plum)"></i> Next Time</p>
+        <textarea class="note-area" id="mem4" style="min-height:70px" placeholder="What did we not get to?"></textarea>
+      </div>
+      <div class="card p-6 md:col-span-2">
+        <p class="font-medium mb-2 flex items-center gap-2"><i class="fa-solid fa-camera" style="color:var(--teal)"></i> Favorite Photo (describe it)</p>
+        <textarea class="note-area" id="mem5" style="min-height:70px" placeholder="Where was it taken, and why does it matter?"></textarea>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="mt-10 border-t fine-line" style="background:var(--bg-alt)">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 py-14 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+    <div>
+      <p class="font-display text-xl font-semibold">SG<span style="color:var(--gold)">·</span>ONE</p>
+      <p class="text-sm mt-2" style="color:var(--text-muted)">A one-day Singapore itinerary for Soleh & Partner. Made with care, before the new job begins.</p>
+    </div>
+    <div class="flex items-center gap-3 text-sm" style="color:var(--text-muted)">
+      <i class="fa-solid fa-ferry"></i> Batam <i class="fa-solid fa-arrow-right-long text-xs"></i> Singapore <i class="fa-solid fa-arrow-right-long text-xs"></i> Batam
+    </div>
+  </div>
+</footer>
+
+<button id="backToTop" aria-label="Back to top"><i class="fa-solid fa-arrow-up"></i></button>
+<div class="savedToast" id="savedToast"><i class="fa-solid fa-circle-check mr-2"></i>Saved</div>
+
+<script>
+/* =========================================================================
+   STATE — everything persisted to localStorage under one key
+   ========================================================================= */
+const STORAGE_KEY = 'sgTripDashboard_v1';
+
+const timelineData = [
+  { id:'t1', time:'08:30', title:'Batam Centre Ferry', desc:'Check in early, immigration on both sides, coffee while we wait to board.', duration:'45 min crossing', mrt:'—', cost:'SGD 25–35 (ferry ticket)', walk:'Minimal', photo:'Ferry deck as we pull away from Batam.', notes:'Bring passport + printed ticket.' },
+  { id:'t2', time:'09:15', title:'Chinatown', desc:'Wander the shophouse streets, incense at Buddha Tooth Relic Temple, browse Chinatown Street Market.', duration:'1 hr', mrt:'Chinatown (NE4/DT19)', cost:'Free to wander', walk:'~1.5 km', photo:'Pagoda Street shophouses, red lanterns overhead.', notes:'Temple has modest-dress expectations.' },
+  { id:'t3', time:'10:30', title:'Ann Siang Hill', desc:'Slow loop up the hill — heritage shopfronts, small cafés, quiet side streets.', duration:'1 hr', mrt:'Telok Ayer (DT18)', cost:'Free (coffee optional, ~SGD 6)', walk:'~800 m, uphill', photo:'Ann Siang Road pastel shopfronts, early light.', notes:'Best light before 11am.' },
+  { id:'t4', time:'11:30', title:'Marina One', desc:'Step into "The Green Heart" — a sunken tropical garden inside the office towers.', duration:'45 min', mrt:'Downtown (DT17)', cost:'Free', walk:'~600 m', photo:'Looking straight up through the cascading greenery.', notes:'Cool, shaded rest stop before lunch.' },
+  { id:'t5', time:'12:15', title:'Lunch at Lau Pa Sat', desc:'Hawker classics under the Victorian ironwork dome — satay street lights up after dark, but the dome is beautiful any time.', duration:'1 hr', mrt:'Downtown (DT17)', cost:'SGD 15–25 for two', walk:'~500 m', photo:'Wide shot of the octagonal dome ceiling.', notes:'Cash and card both accepted at most stalls.' },
+  { id:'t6', time:'14:00', title:'CHIJMES', desc:'Restored chapel and courtyard, gothic architecture wrapped around quiet lawns and cafés.', duration:'45 min', mrt:'City Hall (NS25/EW13)', cost:'Free to enter', walk:'~1 km', photo:'Chapel façade from the courtyard lawn.', notes:'Interior sometimes closed for private events — check on arrival.' },
+  { id:'t7', time:'15:00', title:'National Museum', desc:'Air-conditioned break — the Glass Rotunda and History Gallery are the highlights if time is short.', duration:'1 hr', mrt:'Bras Basah (CC2)', cost:'SGD 15/pax (locals may get discount)', walk:'~500 m', photo:'The Glass Rotunda staircase, looking up.', notes:'Good rest stop in the afternoon heat.' },
+  { id:'t8', time:'16:00', title:'Fort Canning', desc:'Green hill in the middle of the city — Spice Garden, old gates, and skyline peeks through the trees.', duration:'1 hr 15 min', mrt:'Fort Canning (DT20)', cost:'Free', walk:'~1.5 km, some stairs', photo:'The tree tunnel near the Spice Garden entrance.', notes:'Shaded — good for a hot afternoon.' },
+  { id:'t9', time:'17:15', title:'Bugis', desc:'Bugis Street Market for cheap finds, then dessert and coffee before the evening leg.', duration:'1 hr', mrt:'Bugis (EW12/DT14)', cost:'SGD 10–20 shopping + snacks', walk:'~700 m', photo:'Market alley signage at dusk.', notes:'Good spot for the packing-list souvenirs.' },
+  { id:'t10', time:'18:30', title:'Gardens by the Bay', desc:'Supertree Grove as the sun sets, Garden Rhapsody light show after dark.', duration:'2 hrs', mrt:'Bayfront (CE1/DT16)', cost:'Free outdoor gardens; Cloud Forest SGD 32/pax if added', walk:'~1.5 km', photo:'Supertrees from the ground looking straight up at blue hour.', notes:'Light show runs 7:45pm & 8:45pm daily — check current times.' },
+  { id:'t11', time:'20:45', title:'HarbourFront', desc:'Head back toward the ferry terminal — grab a last snack at VivoCity if there\'s time.', duration:'45 min transit', mrt:'HarbourFront (NE1/CC29)', cost:'—', walk:'—', photo:'City lights from the HarbourFront waterfront.', notes:'Leave buffer time — immigration queues vary.' },
+  { id:'t12', time:'21:30', title:'Return to Batam', desc:'Last ferry home — sit back, look through today\'s photos together.', duration:'45 min crossing', mrt:'—', cost:'Included in return ticket', walk:'Minimal', photo:'Singapore skyline shrinking from the ferry deck.', notes:'Confirm the last ferry time in advance — they sell out.' },
+];
+
+const mrtRouteData = [
+  { name:'Batam Centre → HarbourFront', mode:'Ferry', fare:'SGD 25–35', time:'~45 min', transfer:'Clear immigration at HarbourFront' },
+  { name:'HarbourFront → Chinatown', mode:'NE Line', fare:'SGD 1.20', time:'4 min', transfer:'Direct, no transfer' },
+  { name:'Chinatown → Downtown', mode:'DT Line', fare:'SGD 1.20', time:'3 min', transfer:'Direct, no transfer' },
+  { name:'Downtown → Bugis', mode:'DT Line', fare:'SGD 1.20', time:'6 min', transfer:'Direct, no transfer' },
+  { name:'Bugis → Bayfront', mode:'DT Line', fare:'SGD 1.30', time:'8 min', transfer:'Direct, no transfer' },
+  { name:'Bayfront → HarbourFront', mode:'CE / NE Line', fare:'SGD 1.30', time:'10 min', transfer:'Transfer at Outram Park' },
+];
+
+const foodData = [
+  { name:'Satay at Lau Pa Sat', desc:'Grilled over charcoal, street-side after dark.', icon:'fa-fire-burner' },
+  { name:'Chicken Rice, Lau Pa Sat', desc:'A hawker-centre classic done right.', icon:'fa-drumstick-bite' },
+  { name:'Sugar Cane Juice', desc:'Fresh-pressed, ice-cold — best on a hot walk.', icon:'fa-glass-water' },
+  { name:'Maxwell Food Centre', desc:'A second hawker stop if there\'s room left.', icon:'fa-bowl-food' },
+  { name:'Tian Tian Chicken Rice', desc:'The famous stall — expect a short queue.', icon:'fa-star' },
+  { name:'Bugis Dessert', desc:'Something sweet after the market browse.', icon:'fa-ice-cream' },
+  { name:'Coffee, Ann Siang Hill', desc:'A slow flat white between old shopfronts.', icon:'fa-mug-hot' },
+  { name:'Something Unplanned', desc:'Leave one meal open — best finds are unplanned.', icon:'fa-shuffle' },
+];
+
+const photoData = [
+  { name:'Ann Siang Hill', pose:'Walking mid-frame, shophouses either side', time:'9–10am, soft morning light', insp:'Pastel shopfronts, quiet street, natural stride' },
+  { name:'CHIJMES', pose:'Framed under the gothic archway', time:'Early afternoon, open shade', insp:'Chapel façade with courtyard lawn foreground' },
+  { name:'Fort Canning', pose:'Looking up through the tree tunnel', time:'Late afternoon', insp:'Green canopy, dappled light overhead' },
+  { name:'Gardens by the Bay', pose:'Silhouette against the Supertrees', time:'Blue hour, just after sunset', insp:'Supertrees lit, skyline glowing behind' },
+  { name:'Marina One', pose:'Looking straight up through the greenery', time:'Late morning', insp:'Symmetrical, lush green cascade' },
+  { name:'Bugis', pose:'Candid, browsing the market stalls', time:'Golden hour, ~6pm', insp:'Warm string lights, market energy' },
+];
+
+const packingData = [
+  { name:'Passport', icon:'fa-passport' },
+  { name:'Powerbank', icon:'fa-battery-full' },
+  { name:'Umbrella', icon:'fa-umbrella' },
+  { name:'Water Bottle', icon:'fa-bottle-water' },
+  { name:'Phone Charger', icon:'fa-plug' },
+  { name:'EZ-Link Card', icon:'fa-credit-card' },
+  { name:'Cash (SGD)', icon:'fa-sack-dollar' },
+  { name:'Medicine', icon:'fa-pills' },
+  { name:'Camera', icon:'fa-camera-retro' },
+  { name:'Tripod', icon:'fa-video' },
+  { name:'Portable Fan', icon:'fa-fan' },
+];
+
+/* =========================================================================
+   PERSISTENCE
+   ========================================================================= */
+function defaultState(){
+  return {
+    theme: 'light',
+    tripDate: '',
+    budget: { total:400, transport:45, food:80, shopping:60, emergency:30 },
+    timelineStatus: {},
+    foodChecked: {},
+    photoChecked: {},
+    packingChecked: {},
+    notes: { note1:'', note2:'', note3:'' },
+    memories: { mem1:'', mem2:'', mem3:'', mem4:'', mem5:'' }
+  };
+}
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return defaultState();
+    const parsed = JSON.parse(raw);
+    return Object.assign(defaultState(), parsed, {
+      budget: Object.assign(defaultState().budget, parsed.budget || {}),
+      notes: Object.assign(defaultState().notes, parsed.notes || {}),
+      memories: Object.assign(defaultState().memories, parsed.memories || {})
+    });
+  }catch(e){ return defaultState(); }
+}
+let state = loadState();
+let saveTimer = null;
+function persist(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  clearTimeout(saveTimer);
+  const toast = document.getElementById('savedToast');
+  toast.classList.add('show');
+  saveTimer = setTimeout(()=> toast.classList.remove('show'), 1200);
+}
+
+/* =========================================================================
+   THEME
+   ========================================================================= */
+function applyTheme(){
+  document.documentElement.classList.toggle('dark', state.theme === 'dark');
+  document.getElementById('themeIcon').className = state.theme === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+}
+document.getElementById('themeToggle').addEventListener('click', ()=>{
+  state.theme = state.theme === 'dark' ? 'light' : 'dark';
+  applyTheme(); persist();
+});
+applyTheme();
+
+document.getElementById('navMenuBtn').addEventListener('click', ()=>{
+  const m = document.getElementById('mobileMenu');
+  m.classList.toggle('hidden'); m.classList.toggle('flex');
+});
+document.querySelectorAll('#mobileMenu a').forEach(a=>a.addEventListener('click', ()=>{
+  document.getElementById('mobileMenu').classList.add('hidden');
+  document.getElementById('mobileMenu').classList.remove('flex');
+}));
+
+/* =========================================================================
+   TRIP DATE + COUNTDOWN
+   ========================================================================= */
+function defaultTripDate(){
+  const d = new Date();
+  d.setDate(d.getDate() + 14);
+  return d.toISOString().slice(0,10);
+}
+if(!state.tripDate){ state.tripDate = defaultTripDate(); }
+const dateInput = document.getElementById('tripDateInput');
+dateInput.value = state.tripDate;
+function updateDateLabel(){
+  const d = new Date(state.tripDate + 'T08:30:00');
+  const label = d.toLocaleDateString('en-SG', { weekday:'short', day:'numeric', month:'short', year:'numeric' });
+  document.getElementById('tripDateLabel').textContent = label;
+}
+updateDateLabel();
+dateInput.addEventListener('change', ()=>{
+  state.tripDate = dateInput.value || defaultTripDate();
+  updateDateLabel(); persist();
+});
+document.getElementById('editDateBtn').addEventListener('click', ()=> dateInput.showPicker ? dateInput.showPicker() : dateInput.focus());
+
+function tickCountdown(){
+  const target = new Date(state.tripDate + 'T08:30:00').getTime();
+  const now = Date.now();
+  let diff = Math.max(0, target - now);
+  const d = Math.floor(diff / 86400000);
+  const h = Math.floor((diff % 86400000) / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  const s = Math.floor((diff % 60000) / 1000);
+  document.getElementById('cdDays').textContent = String(d).padStart(2,'0');
+  document.getElementById('cdHours').textContent = String(h).padStart(2,'0');
+  document.getElementById('cdMins').textContent = String(m).padStart(2,'0');
+  document.getElementById('cdSecs').textContent = String(s).padStart(2,'0');
+}
+tickCountdown();
+setInterval(tickCountdown, 1000);
+
+/* =========================================================================
+   BUILD: TIMELINE
+   ========================================================================= */
+const timelineList = document.getElementById('timelineList');
+timelineData.forEach((stop, i)=>{
+  const done = !!state.timelineStatus[stop.id];
+  const side = i % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse';
+  const el = document.createElement('div');
+  el.className = 'relative reveal';
+  el.innerHTML = `
+    <div class="flex flex-col lg:flex-row items-start ${side} gap-6 lg:gap-10">
+      <div class="hidden lg:flex flex-1"></div>
+      <div class="station-dot ${done?'done':''}" data-station="${stop.id}" style="margin-left:0;">
+        ${done ? '<i class="fa-solid fa-check"></i>' : (i+1)}
+      </div>
+      <div class="flex-1 timeline-card-wrap" style="padding-left:0;">
+        <div class="card p-6">
+          <div class="flex items-start justify-between gap-4 mb-3">
+            <div>
+              <p class="font-mono text-xs mb-1" style="color:var(--gold)">${stop.time}</p>
+              <h3 class="font-display text-xl font-semibold">${stop.title}</h3>
+            </div>
+            <span class="status-badge ${done?'status-done':'status-upcoming'}" data-badge="${stop.id}">${done?'Done':'Upcoming'}</span>
+          </div>
+          <p class="text-sm mb-4" style="color:var(--text-muted)">${stop.desc}</p>
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="tag-chip"><i class="fa-regular fa-clock"></i> ${stop.duration}</span>
+            <span class="tag-chip"><i class="fa-solid fa-train-subway"></i> ${stop.mrt}</span>
+            <span class="tag-chip"><i class="fa-solid fa-sack-dollar"></i> ${stop.cost}</span>
+            <span class="tag-chip"><i class="fa-solid fa-person-walking"></i> ${stop.walk}</span>
+          </div>
+          <div class="text-xs space-y-1 pt-3 border-t fine-line">
+            <p><i class="fa-solid fa-camera mr-1" style="color:var(--teal)"></i> <span style="color:var(--text-muted)">${stop.photo}</span></p>
+            <p><i class="fa-solid fa-note-sticky mr-1" style="color:var(--gold)"></i> <span style="color:var(--text-muted)">${stop.notes}</span></p>
+          </div>
+          <button class="mt-4 text-xs font-mono uppercase tracking-wide px-4 py-2 rounded-full toggle-status" data-id="${stop.id}" style="background:var(--teal-soft); color:var(--teal)">
+            ${done ? 'Mark as upcoming' : 'Mark as done'}
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+  timelineList.appendChild(el);
+});
+timelineList.addEventListener('click', (e)=>{
+  const btn = e.target.closest('.toggle-status');
+  if(!btn) return;
+  const id = btn.dataset.id;
+  state.timelineStatus[id] = !state.timelineStatus[id];
+  const done = state.timelineStatus[id];
+  btn.textContent = done ? 'Mark as upcoming' : 'Mark as done';
+  const badge = document.querySelector(`[data-badge="${id}"]`);
+  badge.textContent = done ? 'Done' : 'Upcoming';
+  badge.className = `status-badge ${done?'status-done':'status-upcoming'}`;
+  const dot = document.querySelector(`[data-station="${id}"]`);
+  dot.classList.toggle('done', done);
+  dot.innerHTML = done ? '<i class="fa-solid fa-check"></i>' : (timelineData.findIndex(s=>s.id===id)+1);
+  persist();
+});
+
+/* =========================================================================
+   BUILD: MRT ROUTE
+   ========================================================================= */
+const mrtRoute = document.getElementById('mrtRoute');
+mrtRouteData.forEach(seg=>{
+  const el = document.createElement('div');
+  el.className = 'route-stop relative';
+  el.innerHTML = `
+    <p class="font-medium mb-1">${seg.name} <span class="tag-chip ml-2">${seg.mode}</span></p>
+    <div class="flex flex-wrap gap-4 text-sm" style="color:var(--text-muted)">
+      <span><i class="fa-solid fa-coins mr-1" style="color:var(--gold)"></i>${seg.fare}</span>
+      <span><i class="fa-regular fa-clock mr-1" style="color:var(--teal)"></i>${seg.time}</span>
+      <span><i class="fa-solid fa-shuffle mr-1" style="color:var(--coral)"></i>${seg.transfer}</span>
+    </div>
+  `;
+  mrtRoute.appendChild(el);
+});
+
+/* =========================================================================
+   BUILD: FOOD WISHLIST
+   ========================================================================= */
+const foodGrid = document.getElementById('foodGrid');
+foodData.forEach((f,i)=>{
+  const id = 'food'+i;
+  const checked = !!state.foodChecked[id];
+  const el = document.createElement('div');
+  el.className = `card p-5 check-item ${checked?'checked':''}`;
+  el.dataset.id = id;
+  el.innerHTML = `
+    <div class="check-box ${checked?'checked':''}"><i class="fa-solid fa-check text-xs"></i></div>
+    <div>
+      <p class="font-medium check-label flex items-center gap-2"><i class="fa-solid ${f.icon}" style="color:var(--coral)"></i>${f.name}</p>
+      <p class="text-xs mt-1" style="color:var(--text-muted)">${f.desc}</p>
+    </div>
+  `;
+  foodGrid.appendChild(el);
+});
+function updateFoodPct(){
+  const total = foodData.length;
+  const done = Object.values(state.foodChecked).filter(Boolean).length;
+  document.getElementById('foodPct').textContent = Math.round((done/total)*100) + '%';
+}
+foodGrid.addEventListener('click', (e)=>{
+  const item = e.target.closest('.check-item');
+  if(!item) return;
+  const id = item.dataset.id;
+  state.foodChecked[id] = !state.foodChecked[id];
+  item.classList.toggle('checked', state.foodChecked[id]);
+  item.querySelector('.check-box').classList.toggle('checked', state.foodChecked[id]);
+  updateFoodPct(); persist();
+});
+updateFoodPct();
+
+/* =========================================================================
+   BUILD: PHOTO SPOTS
+   ========================================================================= */
+const photoGrid = document.getElementById('photoGrid');
+photoData.forEach((p,i)=>{
+  const id = 'photo'+i;
+  const checked = !!state.photoChecked[id];
+  const el = document.createElement('div');
+  el.className = 'card p-6';
+  el.innerHTML = `
+    <div class="flex items-start justify-between mb-3">
+      <h3 class="font-display text-lg font-semibold">${p.name}</h3>
+      <div class="check-box photo-check ${checked?'checked':''}" data-id="${id}"><i class="fa-solid fa-check text-xs"></i></div>
+    </div>
+    <div class="space-y-2 text-sm" style="color:var(--text-muted)">
+      <p><span class="font-medium" style="color:var(--text)">Best pose:</span> ${p.pose}</p>
+      <p><span class="font-medium" style="color:var(--text)">Best time:</span> ${p.time}</p>
+      <p><span class="font-medium" style="color:var(--text)">Inspiration:</span> ${p.insp}</p>
+    </div>
+  `;
+  photoGrid.appendChild(el);
+});
+photoGrid.addEventListener('click', (e)=>{
+  const box = e.target.closest('.photo-check');
+  if(!box) return;
+  const id = box.dataset.id;
+  state.photoChecked[id] = !state.photoChecked[id];
+  box.classList.toggle('checked', state.photoChecked[id]);
+  persist();
+});
+
+/* =========================================================================
+   BUILD: PACKING CHECKLIST
+   ========================================================================= */
+const packingGrid = document.getElementById('packingGrid');
+packingData.forEach((p,i)=>{
+  const id = 'pack'+i;
+  const checked = !!state.packingChecked[id];
+  const el = document.createElement('div');
+  el.className = `check-item ${checked?'checked':''}`;
+  el.dataset.id = id;
+  el.innerHTML = `
+    <div class="check-box ${checked?'checked':''}"><i class="fa-solid fa-check text-xs"></i></div>
+    <p class="check-label font-medium flex items-center gap-2"><i class="fa-solid ${p.icon}" style="color:var(--teal)"></i>${p.name}</p>
+  `;
+  packingGrid.appendChild(el);
+});
+function updatePackPct(){
+  const total = packingData.length;
+  const done = Object.values(state.packingChecked).filter(Boolean).length;
+  const pct = Math.round((done/total)*100);
+  document.getElementById('packPct').textContent = pct + '%';
+  const circumference = 238.76;
+  const offset = circumference - (pct/100)*circumference;
+  document.getElementById('packRing').style.strokeDashoffset = offset;
+}
+packingGrid.addEventListener('click', (e)=>{
+  const item = e.target.closest('.check-item');
+  if(!item) return;
+  const id = item.dataset.id;
+  state.packingChecked[id] = !state.packingChecked[id];
+  item.classList.toggle('checked', state.packingChecked[id]);
+  item.querySelector('.check-box').classList.toggle('checked', state.packingChecked[id]);
+  updatePackPct(); persist();
+});
+updatePackPct();
+
+/* =========================================================================
+   BUDGET LOGIC
+   ========================================================================= */
+const totalBudgetInput = document.getElementById('totalBudget');
+const catInputs = document.querySelectorAll('.cat-input');
+totalBudgetInput.value = state.budget.total;
+catInputs.forEach(inp=>{ inp.value = state.budget[inp.dataset.cat]; });
+
+let budgetChart = null;
+function renderBudget(){
+  const total = parseFloat(totalBudgetInput.value) || 0;
+  const cats = { transport:0, food:0, shopping:0, emergency:0 };
+  catInputs.forEach(inp=>{ cats[inp.dataset.cat] = parseFloat(inp.value) || 0; });
+  const spent = cats.transport + cats.food + cats.shopping + cats.emergency;
+  const remaining = total - spent;
+
+  document.getElementById('spentDisplay').textContent = 'SGD ' + spent.toLocaleString();
+  document.getElementById('remainingDisplay').textContent = 'SGD ' + remaining.toLocaleString();
+  document.getElementById('remainingDisplay').style.color = remaining < 0 ? 'var(--coral)' : 'var(--teal)';
+
+  const pct = total > 0 ? Math.min(100, Math.round((spent/total)*100)) : 0;
+  document.getElementById('usagePct').textContent = pct + '%';
+  document.getElementById('usageFill').style.width = pct + '%';
+
+  document.querySelectorAll('.cat-fill').forEach(fill=>{
+    const cat = fill.dataset.cat;
+    const catPct = total > 0 ? Math.min(100, Math.round((cats[cat]/total)*100)) : 0;
+    fill.style.width = catPct + '%';
+  });
+
+  const ctx = document.getElementById('budgetChart');
+  const chartData = {
+    labels: ['Transportation','Food','Shopping','Emergency'],
+    datasets: [{
+      data: [cats.transport, cats.food, cats.shopping, cats.emergency],
+      backgroundColor: ['#0F5257', '#C6604D', '#B9822F', '#5B3161'],
+      borderColor: getComputedStyle(document.documentElement).getPropertyValue('--surface') || '#fff',
+      borderWidth: 3,
+    }]
+  };
+  if(budgetChart){
+    budgetChart.data = chartData;
+    budgetChart.update();
+  } else {
+    budgetChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: chartData,
+      options: {
+        responsive:true,
+        cutout:'65%',
+        plugins:{ legend:{ position:'bottom', labels:{ color: getComputedStyle(document.documentElement).getPropertyValue('--text'), boxWidth:12, font:{ family:'Plus Jakarta Sans', size:11 } } } }
+      }
+    });
+  }
+
+  state.budget = { total, ...cats };
+}
+[totalBudgetInput, ...catInputs].forEach(inp=>{
+  inp.addEventListener('input', ()=>{ renderBudget(); });
+  inp.addEventListener('change', ()=>{ persist(); });
+});
+renderBudget();
+
+/* =========================================================================
+   NOTES + MEMORIES (auto-save)
+   ========================================================================= */
+['note1','note2','note3'].forEach(id=>{
+  const el = document.getElementById(id);
+  el.value = state.notes[id] || '';
+  let t;
+  el.addEventListener('input', ()=>{
+    state.notes[id] = el.value;
+    clearTimeout(t);
+    t = setTimeout(persist, 600);
+  });
+});
+['mem1','mem2','mem3','mem4','mem5'].forEach(id=>{
+  const el = document.getElementById(id);
+  el.value = state.memories[id] || '';
+  let t;
+  el.addEventListener('input', ()=>{
+    state.memories[id] = el.value;
+    clearTimeout(t);
+    t = setTimeout(persist, 600);
+  });
+});
+
+/* =========================================================================
+   SCROLL EFFECTS: reveal, navbar shadow, back-to-top
+   ========================================================================= */
+const revealEls = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){ entry.target.classList.add('in'); io.unobserve(entry.target); }
+  });
+}, { threshold: 0.12 });
+revealEls.forEach(el=> io.observe(el));
+
+window.addEventListener('scroll', ()=>{
+  const nav = document.getElementById('navbar');
+  nav.style.boxShadow = window.scrollY > 20 ? 'var(--shadow-sm)' : 'none';
+  const btt = document.getElementById('backToTop');
+  btt.classList.toggle('show', window.scrollY > 600);
+});
+document.getElementById('backToTop').addEventListener('click', ()=>{
+  window.scrollTo({ top:0, behavior:'smooth' });
+});
+
+/* =========================================================================
+   LOADER
+   ========================================================================= */
+window.addEventListener('load', ()=>{
+  setTimeout(()=>{ document.getElementById('loader').classList.add('hide'); }, 500);
+});
+</script>
+</body>
+</html>
